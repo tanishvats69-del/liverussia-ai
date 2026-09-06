@@ -38,9 +38,9 @@ def ask():
     try:
         # Correctly structured Groq free pipeline request
         completion = client.chat.completions.create(
-            model="llama-3.1-8b-instant",
-            
-            messages=[
+            model="gemma2-9b-it",
+    
+        messages=[
                 {
                     "role": "system",
                     "content": f"You are a helpful AI assistant for the LIVE RUSSIA mobile game forum. Answer the user's questions clearly in English based on this forum text: {forum_context}. If asked about rules like 1.09 or location coordinates (GPS), explain them clearly using this data framework."
