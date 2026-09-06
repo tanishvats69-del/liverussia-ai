@@ -26,7 +26,6 @@ def fetch_forum_page(url):
 def home():
     return send_from_directory('.', 'index.html')
 
-@app.route('/ask', border_rules=None, methods=['POST'])
 @app.route('/ask', methods=['POST'])
 def ask():
     data = request.json or {}
