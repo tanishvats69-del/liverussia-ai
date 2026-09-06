@@ -15,12 +15,12 @@ def scrape_forum():
     - Rule 1.09 (Правило 1.09): It is strictly forbidden to use, distribute, or hide any form of third-party software, cheats, scripts, hacks, cleo mods, or programs that give an unfair gameplay advantage over other players. Violating rule 1.09 results in a permanent account ban (Перманентная блокировка аккаунта) across all server networks.
     
     REAL GAME GPS COMMAND MENU PATHS (/gps):
-    - GPS of Church (Церковь / Храм): /gps -> Важные места (Public Places) -> Церковь г. Арзамас (or Арзамасский Храм).
-    - GPS of Mosque (Мечеть): /gps -> Важные места (Public Places) -> Мечеть.
-    - Government Base (Правительство): /gps -> Государственные организации -> Правительство.
-    - FSB Base (ФСБ): /gps -> Государственные организации -> Федеральная Служба Безопасности (ФСБ).
-    - Police Station (ГИБДД / УМВД): /gps -> Государственные организации -> ГИБДД (г. Южный) or УМВД (г. Арзамас).
-    - Military Barracks / Army (Армия / ВЧ): /gps -> Государственные организации -> Воинская часть (Армия).
+    - GPS of Church (Церковь / Храм): /gps -> Важные места (Public Places) -> Церковь г. Арзамас (Arzamas Church / Vatican Server Section).
+    - GPS of Mosque (Мечеть): /gps -> Важные места (Public Places) -> Мечеть (Mosque).
+    - Government Base (Правительство): /gps -> Государственные организации (State Organizations) -> Правительство (Government).
+    - FSB Base (ФСБ): /gps -> Государственные организации (State Organizations) -> Федеральная Служба Безопасности (FSB).
+    - Police Station (ГИБДД / УМВД): /gps -> Государственные организации (State Organizations) -> ГИБДД (г. Южный) or УМВД (г. Арзамас).
+    - Military Barracks / Army (Армия / ВЧ): /gps -> Государственные организации (State Organizations) -> Воинская часть (Army).
     
     FORUM SECTIONS & APPLICATIONS:
     - Support Agent Section (Раздел игровых помощников): Located under the main forum -> Server Section (Выбор сервера) -> Жалобы / Вопросы -> Раздел Агентов Поддержки. Players use this to view helper commands or apply for support roles.
@@ -61,10 +61,11 @@ def ask():
                     "content": (
                         f"You are the official expert AI assistant for the LIVE RUSSIA mobile roleplay game forum. "
                         f"Your job is to answer questions with 100% factual accuracy based on this real server data: {forum_context}. "
-                        f"If the user asks about Rule 1.09, explain that it strictly bans cheats and hacks, resulting in a permanent ban. "
-                        f"If the user asks for the GPS of the church, mosque, or any base, give the exact in-game menu sequence clearly(e.g., /gps -> Public Places -> Church)."
-                        f"You must answer completely and entirely in English only. Translate all Russian game menu terms into clear English so the user can understand them perfectly.
-
+                        f"CRITICAL RULES FOR LANGUAGE: "
+                        f"1. You must reply entirely and completely in English only. "
+                        f"2. Do not use Russian characters in your explanation. Always translate Russian menu paths into clear English text (for example, translate 'Важные места' to 'Public Places', and 'Церковь' to 'Church / Cathedral') so the user can easily understand them. "
+                        f"3. If the user asks about Rule 1.09, explain that it strictly bans cheats and hacks, resulting in a permanent ban. "
+                        f"4. If the user asks for the GPS of any building, list the path menu steps clearly in English format."
                     )
                 },
                 {
@@ -74,7 +75,7 @@ def ask():
             ]
         )
         
-        # BULLETPROOF TEXT PARSING FOR GROQ RESPONSES
+        # Safe response extraction block
         if hasattr(completion, 'choices') and len(completion.choices) > 0:
             choice = completion.choices[0]
             if hasattr(choice, 'message') and hasattr(choice.message, 'content'):
@@ -93,4 +94,3 @@ def ask():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
-
