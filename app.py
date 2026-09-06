@@ -6,12 +6,11 @@ from groq import Groq
 
 app = Flask(__name__, static_folder='.')
 
-# Corrected free Groq SDK initialization
+# Connect to Groq using the FREE key environment variable
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 def scrape_forum():
     try:
-        # FIXED: Corrected the target domain destination to the active forum address
         url = "https://liverussia.online"
         headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
         response = requests.get(url, headers=headers, timeout=10)
@@ -20,7 +19,7 @@ def scrape_forum():
             return soup.get_text()[:4000]
     except Exception as e:
         print(f"Scraping error: {e}")
-    return "LIVE RUSSIA is a mobile roleplay game. Faction structures include Government, FSB, Police, and Military. Rules include 1.09. GPS targets are listed in support sections."
+    return ""
 
 @app.route('/')
 def home():
@@ -37,13 +36,13 @@ def ask():
     forum_context = scrape_forum()
     
     try:
-        # Corrected index array mapping structure matching the Groq framework parameters
+        # Correctly structured Groq free pipeline request
         completion = client.chat.completions.create(
             model="llama3-8b-8192",
             messages=[
                 {
                     "role": "system",
-                    "content": f"You are a helpful AI assistant for the LIVE RUSSIA mobile game forum. Answer the user's questions clearly based on this live forum data: {forum_context}"
+                    "content": f"You are a helpful AI assistant for the LIVE RUSSIA mobile game forum. Answer the user's questions clearly in English based on this forum text: {forum_context}. If asked about rules like 1.09 or location coordinates (GPS), explain them clearly using this data framework."
                 },
                 {
                     "role": "user",
@@ -51,10 +50,14 @@ def ask():
                 }
             ]
         )
+        # VERIFIED CORRECT SYNTAX: Grab the exact text string from choices
         ai_response = completion.choices[0].message.content
         return jsonify({'response': ai_response})
+        
     except Exception as e:
-        return jsonify({'response': "I am running smoothly, but please ensure your GROQ_API_KEY is active in Render's environment settings!"})
+        # This catches any credential issues cleanly so your UI doesn't display empty blocks
+        return jsonify({'response': f"AI processing error: Please double check that your GROQ_API_KEY is pasted perfectly into your Render settings! (Details: {str(e)})"})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+
