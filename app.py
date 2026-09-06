@@ -10,18 +10,17 @@ app = Flask(__name__, static_folder='.')
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 def scrape_forum():
-    # REAL AND VERIFIED LIVE RUSSIA GAME DATA FALLBACK
     real_game_database = """
     LIVE RUSSIA SERVER PROJECT RULES (Официальные правила проекта):
     - Rule 1.09 (Правило 1.09): It is strictly forbidden to use, distribute, or hide any form of third-party software, cheats, scripts, hacks, cleo mods, or programs that give an unfair gameplay advantage over other players. Violating rule 1.09 results in a permanent account ban (Перманентная блокировка аккаунта) across all server networks.
     
     REAL GAME GPS COMMAND MENU PATHS (/gps):
-    - GPS of Church (Церковь / Храм): /gps -> [1] Важные места (Public Places) -> [12] Церковь г. Арзамас (or Арзамасский Храм).
-    - GPS of Mosque (Мечеть): /gps -> [1] Важные места (Public Places) -> [15] Мечеть.
-    - Government Base (Правительство): /gps -> [2] Государственные организации -> [1] Правительство.
-    - FSB Base (ФСБ): /gps -> [2] Государственные организации -> [2] Федеральная Служба Безопасности (ФСБ).
-    - Police Station (ГИБДД / УМВД): /gps -> [2] Государственные организации -> [3] ГИБДД (г. Южный) or УМВД (г. Арзамас).
-    - Military Barracks / Army (Армия / ВЧ): /gps -> [2] Государственные организации -> [4] Воинская часть (Армия).
+    - GPS of Church (Церковь / Храм): /gps -> Важные места (Public Places) -> Церковь г. Арзамас (or Арзамасский Храм).
+    - GPS of Mosque (Мечеть): /gps -> Важные места (Public Places) -> Мечеть.
+    - Government Base (Правительство): /gps -> Государственные организации -> Правительство.
+    - FSB Base (ФСБ): /gps -> Государственные организации -> Федеральная Служба Безопасности (ФСБ).
+    - Police Station (ГИБДД / УМВД): /gps -> Государственные организации -> ГИБДД (г. Южный) or УМВД (г. Арзамас).
+    - Military Barracks / Army (Армия / ВЧ): /gps -> Государственные организации -> Воинская часть (Армия).
     
     FORUM SECTIONS & APPLICATIONS:
     - Support Agent Section (Раздел игровых помощников): Located under the main forum -> Server Section (Выбор сервера) -> Жалобы / Вопросы -> Раздел Агентов Поддержки. Players use this to view helper commands or apply for support roles.
@@ -72,7 +71,19 @@ def ask():
                 }
             ]
         )
-        ai_response = completion.choices.message.content
+        
+        # BULLETPROOF TEXT PARSING FOR GROQ RESPONSES
+        if hasattr(completion, 'choices') and len(completion.choices) > 0:
+            choice = completion.choices[0]
+            if hasattr(choice, 'message') and hasattr(choice.message, 'content'):
+                ai_response = choice.message.content
+            elif isinstance(choice, dict) and 'message' in choice:
+                ai_response = choice['message'].get('content', '')
+            else:
+                ai_response = str(choice)
+        else:
+            ai_response = str(completion)
+            
         return jsonify({'response': ai_response})
         
     except Exception as e:
@@ -80,5 +91,4 @@ def ask():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
-
 
