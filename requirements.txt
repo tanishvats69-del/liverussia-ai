@@ -1,5 +1,5 @@
 flask
-openai
-requests
 beautifulsoup4
+requests
 gunicorn
+groq
