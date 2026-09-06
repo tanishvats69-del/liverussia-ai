@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIVE RUSSIA AI Assistant</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #121212; color: #e0e0e0; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .container { width: 100%; max-width: 600px; background: #1e1e1e; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        h1 { text-align: center; color: #ff4500; margin-top: 0; }
+        .chat-box { height: 300px; overflow-y: auto; border: 1px solid #333; padding: 10px; margin-bottom: 15px; background: #151515; border-radius: 4px; display: flex; flex-direction: column; gap: 10px; }
+        .message { padding: 8px 12px; border-radius: 6px; max-width: 80%; line-height: 1.4; }
+        .user { background: #007acc; color: white; align-self: flex-end; }
+        .bot { background: #2a2a2a; color: #e0e0e0; align-self: flex-start; }
+        .input-group { display: flex; gap: 10px; }
+        input { flex: 1; padding: 10px; border: 1px solid #333; background: #252525; color: white; border-radius: 4px; }
+        button { padding: 10px 20px; background: #ff4500; border: none; color: white; font-weight: bold; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #e03d00; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>LIVE RUSSIA Forum AI</h1>
+        <div class="chat-box" id="chatBox">
+            <div class="message bot">Hello! Ask me any question about the LIVE RUSSIA forum rules, GPS locations, or faction structures.</div>
+        </div>
+        <div class="input-group">
+            <input type="text" id="userInput" placeholder="Ask about rule 1.09 or Church GPS..." onkeydown="if(event.key === 'Enter') sendMessage()">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const chatBox = document.getElementById('chatBox');
+            const text = input.value.trim();
+            if (!text) return;
+
+            // Append User Message
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message user';
+            userMsg.textContent = text;
+            chatBox.appendChild(userMsg);
+            input.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Append Loading Bot Message
+            const botMsg = document.createElement('div');
+            botMsg.className = 'message bot';
+            botMsg.textContent = 'Searching forum files and thinking...';
+            chatBox.appendChild(botMsg);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            try {
+                const response = await fetch('/ask', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ question: text })
+                });
+                const data = await response.json();
+                botMsg.textContent = data.answer;
+            } catch (err) {
+                botMsg.textContent = 'Error contacting the assistant server.';
+            }
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    </script>
+</body>
+</html>
