@@ -52,7 +52,7 @@ def ask():
                 }
             ]
         )
-        ai_response = completion.choices[0].message.content
+        ai_response = completion.choices.message.content
         return jsonify({'response': ai_response})
     except Exception as e:
         return jsonify({'error': f"Error processing AI request: {str(e)}"}), 500
