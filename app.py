@@ -62,7 +62,9 @@ def ask():
                         f"You are the official expert AI assistant for the LIVE RUSSIA mobile roleplay game forum. "
                         f"Your job is to answer questions with 100% factual accuracy based on this real server data: {forum_context}. "
                         f"If the user asks about Rule 1.09, explain that it strictly bans cheats and hacks, resulting in a permanent ban. "
-                        f"If the user asks for the GPS of the church, mosque, or any base, give the exact in-game menu sequence clearly (e.g., /gps -> Public Places -> Church)."
+                        f"If the user asks for the GPS of the church, mosque, or any base, give the exact in-game menu sequence clearly(e.g., /gps -> Public Places -> Church)."
+                        f"You must answer completely and entirely in English only. Translate all Russian game menu terms into clear English so the user can understand them perfectly.
+
                     )
                 },
                 {
